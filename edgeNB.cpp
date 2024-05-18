@@ -11,6 +11,8 @@ const char GPRS_APN[]      = "hologram";
 #define SELF_I2C_ADDR 0x05
 
 SensorValues_t sensorData; //stucture to hold All data passed between Edge and NB
+testValues_t testValues; 
+Status_t status;  //hold statuses to sync between edge and NB
 
 // Water tank constants
 #define PI 3.1415926535897932384626433832795
@@ -55,7 +57,10 @@ void setup() {
   Wire.onRequest(requestEvent); // Register event
 
   rtc.begin();
-  Serial.println(rtc.getEpoch());
+  //Serial.println(rtc.getEpoch());
+  Serial.print("data size")
+  Serial.println(sizeof(sensorData)):
+
   // Start INITIAL NB AND MQTT connection
   while(!initConnect());
 
@@ -74,6 +79,12 @@ void loop() {
   else {
     //mqttClient.poll(); //MQTT keep alive
     //data.modemTime = nbAccess.getTime();
+
+    byte payload[sizeof(testValues_t)];
+    memcpy(payload, &testValues, sizeof(testValues));
+
+    // Publish the binary data to the MQTT topic
+    //client.publish(mqtt_topic, payload, sizeof(payload));
   }
     
 }
