@@ -47,9 +47,10 @@ int initConnect();
 RTCZero rtc;
 
 void setup() {
+  
+
   // Initialize Serial Monitor
   Serial.begin(9600);
-  delay(1500);
 
   pinMode(LED_BUILTIN, OUTPUT);
 
@@ -58,8 +59,8 @@ void setup() {
 
   rtc.begin();
   //Serial.println(rtc.getEpoch());
-  Serial.print("data size")
-  Serial.println(sizeof(sensorData)):
+  //Serial.print("data size");
+ //Serial.println(sizeof(sensorData));
 
   // Start INITIAL NB AND MQTT connection
   while(!initConnect());
@@ -80,8 +81,8 @@ void loop() {
     //mqttClient.poll(); //MQTT keep alive
     //data.modemTime = nbAccess.getTime();
 
-    byte payload[sizeof(testValues_t)];
-    memcpy(payload, &testValues, sizeof(testValues));
+    //byte payload[sizeof(testValues_t)];
+    //memcpy(payload, &testValues, sizeof(testValues));
 
     // Publish the binary data to the MQTT topic
     //client.publish(mqtt_topic, payload, sizeof(payload));
@@ -89,11 +90,7 @@ void loop() {
     
 }
     
-void setTime() {
-  
 
-  rtc.setEpoch(nbAccess.getTime());
-}
 
 int initConnect() {
   Serial.println("Starting LTE connection...");
@@ -102,7 +99,7 @@ int initConnect() {
   if (status == NB_READY) {
     Serial.println("LTE connected!");
     digitalWrite(LED_BUILTIN, HIGH);
-    setTime(); //update data stuture to share with Edge controller
+    rtc.setEpoch(nbAccess.getTime()); //set RTC from NB modem
     //mqttClient.connect(broker, port);
     //Serial.println("MQTT connected!");
     return 1;
